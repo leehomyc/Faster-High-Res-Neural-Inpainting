@@ -42,4 +42,4 @@ local list_params = {
 {'demo', 'fake_0007.png', 'real_0007.jpg',  'image', 512, 3, {100, 100, 100}, {12, 21}, {1e-4, 1e-4}, {3, 3}, 1, 1, {2, 2}, {2, 2}, {0, 0}, {23}, 2e1, 1e-4, 'speed', 256, 16, 'cudnn'},
 }
 
-run_tests(require 'transfer_CNNMRF_wrapper_2_large2_new_model_1000', list_params)
+run_tests(require 'transfer_CNNMRF_wrapper', list_params)
