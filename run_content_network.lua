@@ -27,7 +27,7 @@ local real=torch.Tensor(3,128,128)
 local real_ctx = torch.Tensor(3,128,128)
 local fake2 = torch.Tensor(3,256,256)
 
-for i=1,7 dofile
+for i=1,7 do
     real=loadImage(string.format('examples/pink_%04d.png',i),512)
     real_ctx:copy(image.scale(real,128,128))
     fake = modelG:forward(real_ctx)
