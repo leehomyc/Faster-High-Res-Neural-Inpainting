@@ -18,11 +18,8 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
   bash ./models/download_content_models.sh
   # This will populate the `./models/` folder with trained content models.
   th run_content_network.lua
+  # This will use the trained model to generate the output of the content network
 ```
-
-
-### Training your own content network
-
 
 
 
