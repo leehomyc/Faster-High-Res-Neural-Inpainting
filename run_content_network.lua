@@ -23,7 +23,7 @@ end
 
 modelG=util.load(opt.model_file,opt.gpu)
 
-local real=torch.Tensor(7,3,128,128)
+local real=torch.Tensor(7,3,512,512)
 local real_ctx = torch.Tensor(7,3,128,128)
 local fake2 = torch.Tensor(3,256,256)
 local output=torch.Tensor(3,512,512)
