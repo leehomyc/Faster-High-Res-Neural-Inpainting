@@ -36,16 +36,9 @@ local function main(params)
   local source_image = image.load(string.format('examples/%s', params.content_name), 3)
   local target_image = image.load(string.format('examples/%s', params.style_name), 3)
 
-  --target_image[{{},{30,58},{30,99}}]:copy(target_image[{{},{1,29},{30,99}}])
-  --target_image[{{},{59,70},{30,99}}]:copy(target_image[{{},{18,29},{30,99}}])
-  --target_image[{{},{71,99},{30,99}}]:copy(target_image[{{},{100,128},{30,99}}])
-
   target_image[{{},{117,232},{117,396}}]:copy(target_image[{{},{1,116},{117,396}}])
   target_image[{{},{233,280},{117,396}}]:copy(target_image[{{},{69,116},{117,396}}])
   target_image[{{},{281,396},{117,396}}]:copy(target_image[{{},{397,512},{117,396}}])
-
-  --target_image[{{},{129,256},{129,384}}]:copy(target_image[{{},{1,128},{129,384}}])
-  --target_image[{{},{257,384},{129,384}}]:copy(target_image[{{},{385,512},{129,384}}])
 
   source_image = image.scale(source_image, params.max_size, 'bilinear')
   target_image = image.scale(target_image, params.max_size, 'bilinear')
@@ -340,7 +333,7 @@ local function main(params)
     local disp = deprocess(input_image:float())
     disp = image.minmax{tensor=disp, min=0, max=1}
     disp = image.scale(disp, render_width, render_height, 'bilinear')
-    local filename = string.format('%s/res_%d_%d.jpg', params.output_folder, cur_res, t)
+    local filename = string.format('%s.jpg', params.output_folder)
     if cur_res==3 then
       image.save(filename, disp)
     end

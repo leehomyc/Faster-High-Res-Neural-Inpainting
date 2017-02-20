@@ -19,6 +19,8 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
   # This will populate the `./models/` folder with trained content models.
   th run_content_network.lua
   # This will use the trained model to generate the output of the content network
+  th run_texture_optimization.lua
+  # This will use the trained model to run texture optimization and generate the final result
 ```
 
 
