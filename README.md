@@ -10,11 +10,11 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
 
 2. Clone the repository
 ```Shell
-  git clone https://github.com/leehomyc/High-Resolution-Image-Inpainting-using-Multi-Scale-Neural-Patch-Synthesis.git
+  git clone https://github.com/leehomyc/High-Res-Neural-Inpainting.git
 ```
 3. Demo
 ```Shell
-  cd High-Resolution-Image-Inpainting-using-Multi-Scale-Neural-Patch-Synthesis
+  cd High-Res-Neural-Inpainting
   bash ./models/scripts/download_content_models.sh
   # This will populate the `./models/` folder with trained models.
 ```
