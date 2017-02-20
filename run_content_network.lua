@@ -23,14 +23,14 @@ end
 
 modelG=util.load(opt.model_file,opt.gpu)
 
-local real=torch.Tensor(3,128,128)
+local real=torch.Tensor(7,3,128,128)
 local real_ctx = torch.Tensor(7,3,128,128)
 local fake2 = torch.Tensor(3,256,256)
 local output=torch.Tensor(3,512,512)
 
 for i=1,7 do
-    real=loadImage(string.format('examples/pink_%04d.jpg',i),512)
-    real_ctx[i]:copy(image.scale(real,128,128))
+    real[i]=loadImage(string.format('examples/pink_%04d.jpg',i),512)
+    real_ctx[i]:copy(image.scale(real[i],128,128))
 end
 fake = modelG:forward(real_ctx)
 for i=1,7 do
