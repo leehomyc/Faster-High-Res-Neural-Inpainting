@@ -4,7 +4,7 @@ require 'optim'
 require 'image'
 require 'nngraph'
 require 'cudnn'
-
+util = paths.dofile('util.lua')
 torch.setdefaulttensortype('torch.FloatTensor')
 
 opt = {
