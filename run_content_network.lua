@@ -4,23 +4,13 @@ require 'optim'
 require 'image'
 require 'nngraph'
 require 'cudnn'
-util = paths.dofile('util.lua')
+
 torch.setdefaulttensortype('torch.FloatTensor')
 
 opt = {
-  dataset = 'folder', 
-  batchSize=7,
-  niter=40,
-  fineSize=128,
-  ntrain = math.huge, 
   gpu=1,
-  nThreads = 4,
-  scale=4,
-  loadSize=512,
   overlapPred=4,
-  train_folder='',
-  model_file='',
-  result_path=''
+  model_file='models/imagenet_inpaintCenter.t7',
 }
 for k,v in pairs(opt) do opt[k] = tonumber(os.getenv(k)) or os.getenv(k) or opt[k] end
 print(opt)
