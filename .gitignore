@@ -40,3 +40,4 @@ luac.out
 *.hex
 
 .DC_Store
+*.t7

@@ -15,8 +15,8 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
 3. Demo
 ```Shell
   cd High-Res-Neural-Inpainting
-  bash ./models/scripts/download_content_models.sh
-  # This will populate the `./models/` folder with trained models.
+  bash ./models/download_content_models.sh
+  # This will populate the `./models/` folder with trained content models.
 ```
 
 
