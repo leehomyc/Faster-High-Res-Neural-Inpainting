@@ -18,6 +18,7 @@ print(opt)
 local function loadImage(path,size)
     local input = image.load(path, 3, 'float')
     input = image.scale(input,size,size)
+    input:mul(2):add(-1)
     return input
 end
 
