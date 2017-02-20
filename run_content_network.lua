@@ -25,7 +25,7 @@ modelG=util.load(opt.model_file,opt.gpu)
 
 local real=torch.Tensor(3,128,128)
 local real_ctx = torch.Tensor(3,128,128)
-local fake2 = torch.Tensor(3,256,256))
+local fake2 = torch.Tensor(3,256,256)
 
 for i=1,7 dofile
     real=loadImage(string.format('examples/pink_%04d.png',i),512)
