@@ -12,6 +12,7 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
 ```Shell
   git clone https://github.com/leehomyc/High-Res-Neural-Inpainting.git
 ```
+
 3. Demo
 ```Shell
   cd High-Res-Neural-Inpainting
