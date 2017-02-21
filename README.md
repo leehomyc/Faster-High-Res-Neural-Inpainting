@@ -15,14 +15,14 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
 3. Demo
 ```Shell
   cd High-Res-Neural-Inpainting
-  bash ./models/download_content_models.sh
   # This will populate the `./models/` folder with trained content models.
-  th run_content_network.lua
+  bash ./models/download_content_models.sh
   # This will use the trained model to generate the output of the content network
-  th run_texture_optimization.lua
+  th run_content_network.lua
   # This will use the trained model to run texture optimization
-  th blend.lua
+  th run_texture_optimization.lua
   # This will generate the final result
+  th blend.lua
 ```
 
 
