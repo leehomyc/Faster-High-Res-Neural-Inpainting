@@ -50,7 +50,7 @@ for i=1,1 do
     output[output:gt(1)]=1
     output[output:lt(-1)]=-1
     output=(output+1)/2
-    image.save(string.format('examples/fake_%04d.png',i),output)
+    image.save(string.format('examples/fake_me_%04d.png',i),output)
 end
 
 
