@@ -13,11 +13,11 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
   git clone https://github.com/leehomyc/High-Res-Neural-Inpainting.git
 ```
 
-   Run the Demo
+3. Download the [pre-trained models](https://drive.google.com/open?id=0BxYj-YwDqh45XzZVTXF1dnJXY28) for the content and texture networks and put them under the folder models/.
+
+4. Run the Demo
 ```Shell
   cd High-Res-Neural-Inpainting
-  # This will populate the `./models/` folder with trained content models.
-  bash ./models/download_content_models.sh
   # This will use the trained model to generate the output of the content network
   th run_content_network.lua
   # This will use the trained model to run texture optimization
