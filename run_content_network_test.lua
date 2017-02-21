@@ -11,7 +11,7 @@ opt = {
   gpu=1,
   fineSize=128,
   overlapPred=4,
-  model_file='/media/harryyang/New Volume/models/inpaintCenter/imagenet_inpaintCenter.t',
+  model_file='/media/harryyang/New Volume/models/inpaintCenter/imagenet_inpaintCenter.t7',
 }
 for k,v in pairs(opt) do opt[k] = tonumber(os.getenv(k)) or os.getenv(k) or opt[k] end
 print(opt)
