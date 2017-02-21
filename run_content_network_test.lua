@@ -42,8 +42,8 @@ for i=1,1 do
     image.save(string.format('examples/test.png'),test)
 end
 fake = modelG:forward(real_ctx)
-fake[1]=(fake[1]+1)/2
-image.save(string.format('examples/test2.png'),fake[1])
+--fake[1]=(fake[1]+1)/2
+--image.save(string.format('examples/test2.png'),fake[1])
 for i=1,1 do
     fake2:copy(image.scale(fake[i],256,256))
     output:copy(real[i])
