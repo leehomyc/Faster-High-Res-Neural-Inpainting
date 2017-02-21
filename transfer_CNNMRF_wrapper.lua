@@ -185,12 +185,10 @@ local function main(params)
     -- print(string.format('build target mrf'));
     -- print('*****************************************************')
     for i_image = 1, #target_images_caffe do
-       print(string.format('image %d, ', i_image))
     --   print(target_image_caffe[i_image]:size())
       net:forward(target_images_caffe[i_image])
-      print(net:get(mrf_layers[id_mrf] - 1).name)
+   
       local target_feature_map = net:get(mrf_layers[id_mrf] - 1).output:float()
-      print(target_feature_map:size())
       if params.mrf_patch_size[id_mrf] > target_feature_map:size()[2] or params.mrf_patch_size[id_mrf] > target_feature_map:size()[3] then
         print('target_images is not big enough for patch')
         print('target_images size: ')
@@ -288,10 +286,9 @@ local function main(params)
      print('*****************************************************')
      print(string.format('call layer implemetation'));
      print('*****************************************************')
-    print(target_mrf:size())
-    print(params.mrf_patch_size)
+  
     local nInputPlane = target_mrf:size()[2] / (params.mrf_patch_size[id_mrf] * params.mrf_patch_size[id_mrf])
-    print(nInputPlane)
+   
     local nOutputPlane = target_mrf:size()[1]
     local kW = params.mrf_patch_size[id_mrf]
     local kH = params.mrf_patch_size[id_mrf]
@@ -465,17 +462,6 @@ local function main(params)
       collectgarbage()
 
       print(net)
-
-      print('content_layers: ')
-      for i = 1, #content_layers do
-        print(content_layers[i])
-      end
-
-      print('mrf_layers: ')
-      for i = 1, #mrf_layers do
-        print(mrf_layers[i])
-      end
-
       print('network has been built.')
     else
       input_image = image.scale(input_image:float(), pyramid_source_image_caffe[i_res]:size()[3], pyramid_source_image_caffe[i_res]:size()[2], 'bilinear'):clone()
