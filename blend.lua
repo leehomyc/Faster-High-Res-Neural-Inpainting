@@ -3,5 +3,5 @@ local source=image.load('')
 local tgt=image.load('')
 local mask=image.load('')
 
-local res=source*mask/255+tgt*(255-mask)/255
+local res=torch.cmul(src,mask)+torch.cmul(tgt,1-mask)
 image.save('',res)
