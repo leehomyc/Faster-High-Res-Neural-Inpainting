@@ -80,7 +80,6 @@ local function main(params)
     end
 
     local norm = params.normalize_gradients
-    print(params.normalize_gradients)
     local loss_module = nn.ContentLoss(params.content_weight, feature, norm):float()
     if params.gpu >= 0 then
       if params.backend == 'cudnn' then
