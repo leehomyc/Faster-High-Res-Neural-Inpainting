@@ -11,7 +11,7 @@ opt = {
   gpu=1,
   fineSize=128,
   overlapPred=4,
-  model_file='models/imagenet_inpaintCenter.t7',
+  model_file='/media/harryyang/New Volume/models/inpaintCenter/imagenet_inpaintCenter.t',
 }
 for k,v in pairs(opt) do opt[k] = tonumber(os.getenv(k)) or os.getenv(k) or opt[k] end
 print(opt)
@@ -42,6 +42,7 @@ for i=1,1 do
     image.save(string.format('examples/test.png'),test)
 end
 fake = modelG:forward(real_ctx)
+fake[1]=(fake[1]+1)/2
 image.save(string.format('examples/test2.png'),fake[1])
 for i=1,1 do
     fake2:copy(image.scale(fake[i],256,256))
