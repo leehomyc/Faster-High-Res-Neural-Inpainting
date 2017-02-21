@@ -42,3 +42,4 @@ luac.out
 .DC_Store
 *.t7
 *.caffemodel
+.DS_Store
