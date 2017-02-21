@@ -33,7 +33,6 @@ local output=torch.Tensor(3,512,512)
 for i=1,32 do
     real[i]=loadImage(string.format('examples/input_%04d.png',i),512)
     real_ctx[i]:copy(image.scale(real[i],128,128))
-    print(real_ctx[i]:max())
     real_ctx[{i,{1},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred}}] = 2*117/255.0 - 1.0
     real_ctx[{i,{2},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred}}] = 2*104/255.0 - 1.0
     real_ctx[{i,{3},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred}}] = 2*123/255.0 - 1.0
