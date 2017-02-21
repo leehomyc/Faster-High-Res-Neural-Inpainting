@@ -31,7 +31,7 @@ local real_ctx = torch.Tensor(1,3,128,128)
 local fake2 = torch.Tensor(3,256,256)
 local output=torch.Tensor(3,512,512)
 
-for i=1,1 do
+for i=1,32 do
     real[i]=loadImage(string.format('examples/real_0037.png',i),512)
     real_ctx[i]:copy(image.scale(real[i],128,128))
     print(real_ctx[i]:max())
