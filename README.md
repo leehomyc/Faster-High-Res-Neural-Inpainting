@@ -13,7 +13,7 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
   git clone https://github.com/leehomyc/High-Res-Neural-Inpainting.git
 ```
 
-3. Demo
+   Run the Demo
 ```Shell
   cd High-Res-Neural-Inpainting
   # This will populate the `./models/` folder with trained content models.
