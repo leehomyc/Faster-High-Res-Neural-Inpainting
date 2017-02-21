@@ -20,7 +20,7 @@ local function loadImage(path,size)
     local input = image.load(path, 3, 'float')
     input = image.scale(input,size,size)
     input:mul(2):add(-1)
-    print(input:size())
+ --   print(input:size())
     return input
 end
 
@@ -32,26 +32,26 @@ local fake2 = torch.Tensor(3,256,256)
 local output=torch.Tensor(3,512,512)
 
 for i=1,32 do
-    real[i]=loadImage(string.format('examples/real_0037.png',i),512)
+    real[i]=loadImage(string.format('examples2/real_%04d.png',i),512)
     real_ctx[i]:copy(image.scale(real[i],128,128))
     print(real_ctx[i]:max())
     real_ctx[{i,{1},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred}}] = 2*117/255.0 - 1.0
     real_ctx[{i,{2},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred}}] = 2*104/255.0 - 1.0
     real_ctx[{i,{3},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred},{1 + opt.fineSize/4 + opt.overlapPred, opt.fineSize/2 + opt.fineSize/4 - opt.overlapPred}}] = 2*123/255.0 - 1.0
-    test=(real_ctx[1]+1)/2
-    image.save(string.format('examples/test.png'),test)
+   -- test=(real_ctx[1]+1)/2
+  --  image.save(string.format('examples/test.png'),test)
 end
 fake = modelG:forward(real_ctx)
 --fake[1]=(fake[1]+1)/2
 --image.save(string.format('examples/test2.png'),fake[1])
-for i=1,1 do
+for i=1,32 do
     fake2:copy(image.scale(fake[i],256,256))
     output:copy(real[i])
     output[{{},{145,368},{145,368}}]:copy(fake2[{{},{17, 240},{17, 240}}])
     output[output:gt(1)]=1
     output[output:lt(-1)]=-1
     output=(output+1)/2
-    image.save(string.format('examples/fake_%04d.png',i),output)
+    image.save(string.format('examples2/fake_%04d.png',i),output)
 end
 
 
