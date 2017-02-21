@@ -6,16 +6,16 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
 
 ### Demo
 
-1. Install Torch:  http://torch.ch/docs/getting-started.html#_
+- Install Torch:  http://torch.ch/docs/getting-started.html#_
 
-2. Clone the repository
+- Clone the repository
 ```Shell
   git clone https://github.com/leehomyc/High-Res-Neural-Inpainting.git
 ```
 
-3. Download the [pre-trained models](https://drive.google.com/open?id=0BxYj-YwDqh45XzZVTXF1dnJXY28) for the content and texture networks and put them under the folder models/.
+- Download the [pre-trained models](https://drive.google.com/open?id=0BxYj-YwDqh45XzZVTXF1dnJXY28) for the content and texture networks and put them under the folder models/.
 
-4. Run the Demo
+- Run the Demo
 ```Shell
   cd High-Res-Neural-Inpainting
   # This will use the trained model to generate the output of the content network
