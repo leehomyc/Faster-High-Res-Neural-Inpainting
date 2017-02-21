@@ -9,7 +9,7 @@ torch.setdefaulttensortype('torch.FloatTensor')
 
 opt = {
   gpu=1,
-  fineSize=512,
+  fineSize=128,
   overlapPred=4,
   model_file='models/imagenet_inpaintCenter.t7',
 }
