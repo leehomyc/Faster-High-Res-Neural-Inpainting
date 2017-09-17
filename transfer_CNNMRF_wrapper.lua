@@ -342,12 +342,7 @@ local function main(params)
   local function feval(x)
     num_calls = num_calls + 1
     net:forward(x)
-    local timer = torch.Timer()
-    local t5_1_1 = timer:time().real
-    --- print(string.format('t5_1_1: Total time: %f seconds', t5_1_1))
     local grad = net:backward(x, dy)
-    local t5_1_2 = timer:time().real
-    --- print(string.format('t5_1_2: Total time: %f seconds', t5_1_2))
     local loss = 0
     collectgarbage()
 
@@ -511,9 +506,7 @@ local function main(params)
     dy = input_image.new(#y):zero()
 
     -- do optimizatoin
-    print('start optimization')
     local x, losses = mylbfgs(feval, input_image, optim_state, nil, mask)
-    print('finished optimization')
 
     local t = timer:time().real
     print(string.format('Synthesis finished at resolution %d, %f seconds', cur_res, t))
