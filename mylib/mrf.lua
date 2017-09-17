@@ -2,6 +2,7 @@ local MRFMM, parent = torch.class('nn.MRFMM', 'nn.Module')
 
 function MRFMM:__init()
    parent.__init(self)
+   self.max_response = nil
 end
 
 function MRFMM:implement(mode, target_mrf, tensor_target_mrf, target_mrfnorm, source_x, source_y, input_size, response_size, nInputPlane, nOutputPlane, kW, kH, dW, dH, threshold_conf, strength, gpu_chunck_size_1, gpu_chunck_size_2, backend, gpu)
@@ -99,7 +100,7 @@ end
 
 function MRFMM:updateGradInput(input, gradOutput)
 
-  -- local timer_ALL = torch.Timer()
+  local timer = torch.Timer()
 
   -- local timer_PREP = torch.Timer()
   input = makeContiguous(self, input)
@@ -110,6 +111,8 @@ function MRFMM:updateGradInput(input, gradOutput)
   self.gradTO_confident = self.gradTO_confident:fill(0) + 1e-10
   local source_mrf, x, y = computeMRFnoTensor(input:float(), self.kW, 1, self.mode == 'memory' and -1 or 1, self.backend)
   local source_mrfnorm = torch.Tensor(source_mrf:size()[1])
+  --- print(self.mode)
+  --- print(self.backend)
   if self.mode == 'speed' then
       if self.backend == 'cudnn' then
         source_mrfnorm = torch.sqrt(torch.sum(torch.cmul(source_mrf, source_mrf), 2)):resize(1, y:nElement(), x:nElement())
@@ -138,6 +141,8 @@ function MRFMM:updateGradInput(input, gradOutput)
   -- local t_io = 0
   -- local t_conv = 0
   -- local t_clone = 0
+  local t1 = timer:time().real
+  -- print(string.format('mrf_t1: Total time: %f seconds', t1))
   for i_chunk = 1, num_chunk do
     local i_start = (i_chunk - 1) * self.gpu_chunck_size_1 + 1
     local i_end = math.min(i_start + self.gpu_chunck_size_1 - 1, nOutputPlane_all)
@@ -195,20 +200,33 @@ function MRFMM:updateGradInput(input, gradOutput)
     end
     self.response[{{i_start, i_end}, {1, self.response:size()[2]}, {1, self.response:size()[3]}}] = temp
   end
-
-  local num_chunk_2 = math.ceil(self.response:size()[2] / self.gpu_chunck_size_2) 
-  for i_chunk_2 = 1, num_chunk_2 do
-    local i_start = (i_chunk_2 - 1) * self.gpu_chunck_size_2 + 1
-    local i_end = math.min(i_start + self.gpu_chunck_size_2 - 1, self.response:size()[2])
+  local t1 = timer:time().real
+  --print(string.format('mrf_t2: Total time: %f seconds', t1))
+  if self.max_response == nil or self.max_response:size()[2] ~= self.response:size()[2] then
+    local t1 = timer:time().real
+    --- print(string.format('mrf_t2: Total time: %f seconds', t1))
+    local num_chunk_2 = math.ceil(self.response:size()[2] / self.gpu_chunck_size_2) 
+    for i_chunk_2 = 1, num_chunk_2 do
+      local i_start = (i_chunk_2 - 1) * self.gpu_chunck_size_2 + 1
+      local i_end = math.min(i_start + self.gpu_chunck_size_2 - 1, self.response:size()[2])
       if i_chunk_2 < num_chunk_2 then
         self.response[{{1, self.response:size()[1]}, {i_start, i_end}, {1, self.response:size()[3]}}] = self.response[{{1, self.response:size()[1]}, {i_start, i_end}, {1, self.response:size()[3]}}]:cdiv(self.tensor_target_mrfnorm)
       else
         self.response[{{1, self.response:size()[1]}, {i_start, i_end}, {1, self.response:size()[3]}}] = self.response[{{1, self.response:size()[1]}, {i_start, i_end}, {1, self.response:size()[3]}}]:cdiv(self.tensor_target_mrfnorm[{{1, self.response:size()[1]}, {1, i_end - i_start + 1}, {1, self.response:size()[3]}}])
       end
-  end
+    end
 
-  -- local timer_AFT = torch.Timer()
-  local max_response, max_id = torch.max(self.response, 1)
+    local t1 = timer:time().real
+    --print(string.format('mrf_t3: Total time: %f seconds', t1))
+
+    -- local timer_AFT = torch.Timer()
+    local max_response, max_id = torch.max(self.response, 1)
+    self.max_response = max_response
+    self.max_id = max_id
+  end
+  --print(self.max_response:size())
+  local t1 = timer:time().real
+  --print(string.format('mrf_t4: Total time: %f seconds', t1))
   -- local t_aft = timer_AFT:time().real
 
   -- local t_match = timer_MATCH:time().real
@@ -216,19 +234,35 @@ function MRFMM:updateGradInput(input, gradOutput)
   -- local timer_SYN = torch.Timer()
   source_mrf = source_mrf:resize(source_mrf:size()[1], self.nInputPlane, self.kW, self.kH)
   self.target_mrf = self.target_mrf:resize(self.target_mrf:size()[1], self.nInputPlane, self.kW, self.kH)
+  --- print(self.source_x:nElement())
+  --- print(self.nInputPlane)
+  local t1 = timer:time().real
+  print(string.format('mrf_t5: Total time: %f seconds', t1))
   for i_patch = 1, self.source_x:nElement() do
-      local sel_response = max_response[1][self.source_y[i_patch]][self.source_x[i_patch]]
-      if sel_response >= self.threshold_conf then
-        local sel_idx = max_id[1][self.source_y[i_patch]][self.source_x[i_patch]]
-        local source_idx = (self.source_y[i_patch] - 1) * x:nElement() + self.source_x[i_patch]        
-        self.gradTO[{{1, self.nInputPlane}, {self.source_y[i_patch], self.source_y[i_patch] + self.kH - 1}, {self.source_x[i_patch], self.source_x[i_patch] + self.kW - 1}}]:add(self.target_mrf[sel_idx] - source_mrf[source_idx])
-        self.gradTO_confident[{{self.source_y[i_patch], self.source_y[i_patch] + self.kH - 1}, {self.source_x[i_patch], self.source_x[i_patch] + self.kW - 1}}]:add(1)    
-      end
+    ---  print(self.source_y[i_patch])
+    ---  print(self.source_x[i_patch])
+      --print(max_response:size())
+      --local sel_response = max_response[1][self.source_y[i_patch]][self.source_x[i_patch]]
+      --if sel_response >= self.threshold_conf then
+      local sel_idx = self.max_id[1][self.source_y[i_patch]][self.source_x[i_patch]]
+      local source_idx = (self.source_y[i_patch] - 1) * x:nElement() + self.source_x[i_patch]        
+      self.gradTO[{{1, self.nInputPlane}, {self.source_y[i_patch], self.source_y[i_patch] + self.kH - 1}, {self.source_x[i_patch], self.source_x[i_patch] + self.kW - 1}}]:add(self.target_mrf[sel_idx] - source_mrf[source_idx])
+      self.gradTO_confident[{{self.source_y[i_patch], self.source_y[i_patch] + self.kH - 1}, {self.source_x[i_patch], self.source_x[i_patch] + self.kW - 1}}]:add(1)    
+      --end
+      --break
   end
+  local t1 = timer:time().real
+  print(string.format('mrf_t6: Total time: %f seconds', t1))
+  local t1 = timer:time().real
   self.gradTO:cdiv(torch.repeatTensor(self.gradTO_confident, self.nInputPlane, 1, 1))
+  --print(string.format('mrf_t7: Total time: %f seconds', t1))
+
   self.nOutputPlane = nOutputPlane_all
   self.target_mrf = self.target_mrf:resize(self.target_mrf:size()[1], self.nInputPlane * self.kW * self.kH)
   -- local t_syn = timer_SYN:time().real
+
+  local t1 = timer:time().real
+  --print(string.format('mrf_t8: Total time: %f seconds', t1))
 
   if gradOutput:size()[1] == input:size()[1] then
     if self.gpu >= 0 then

@@ -11,7 +11,7 @@ function mylbfgs(opfunc, x, config, state, mask)
    local tolX = config.tolX or 1e-9
    local nCorrection = config.nCorrection or 100
    local lineSearch = config.lineSearch
-   local lineSearchOpts = config.lineSearchOptions
+   local lineSearchOpts = config.Options
    local learningRate = config.learningRate or 1
    local isverbose = config.verbose or false
    
@@ -59,6 +59,7 @@ function mylbfgs(opfunc, x, config, state, mask)
    local nIter = 0
    while nIter < maxIter do
       -- keep track of nb of iterations
+      local timer = torch.Timer()
       nIter = nIter + 1
       state.nIter = state.nIter + 1
       -- print(state.nIter)
@@ -72,10 +73,11 @@ function mylbfgs(opfunc, x, config, state, mask)
         Hdiag = 1
       else
         -- do lbfgs update (update memory)
-        local y = g:clone():add(-1, g_old)  -- g - g_old
-        local s = d:clone():mul(t)  -- d*t
-        local ys = y:dot(s)  -- y*s 
-             
+         local y = g:clone():add(-1, g_old)  -- g - g_old
+         local s = d:clone():mul(t)  -- d*t
+         local ys = y:dot(s)  -- y*s 
+         local t1 = timer:time().real
+         --- print(string.format('t1: Total time: %f seconds', t1))
          if ys > 1e-10 then
             -- updating memory
             if #old_dirs == nCorrection then
@@ -100,7 +102,8 @@ function mylbfgs(opfunc, x, config, state, mask)
             -- cleanup
             collectgarbage()
          end
-
+         local t2 = timer:time().real
+         --- print(string.format('t2: Total time: %f seconds', t2))
          -- compute the approximate (L-BFGS) inverse Hessian 
          -- multiplied by the gradient
          local p = g:size(1)
@@ -127,7 +130,8 @@ function mylbfgs(opfunc, x, config, state, mask)
             q[i] = q[i+1]
             q[i]:add(-al[i], old_stps[i])
          end
-
+         local t3 = timer:time().real
+         --- print(string.format('t3: Total time: %f seconds', t3))
          -- multiply by initial Hessian
          r[1] = q[1]:clone():mul(Hdiag)  -- q[1] * Hdiag
 
@@ -139,6 +143,8 @@ function mylbfgs(opfunc, x, config, state, mask)
 
          -- final direction:
          d:copy(r[k+1])
+         local t4 = timer:time().real
+         -- print(string.format('t4: Total time: %f seconds', t4))
       end -- end if state.nIter == 1 then
 
       g_old = g:clone()
@@ -162,7 +168,8 @@ function mylbfgs(opfunc, x, config, state, mask)
       else
          t = learningRate
       end
-
+      local t5 = timer:time().real
+      -- print(string.format('t5: Total time: %f seconds', t5))
       -- optional line search: user function
       local lsFuncEval = 0
       if lineSearch and type(lineSearch) == 'function' then
@@ -176,13 +183,18 @@ function mylbfgs(opfunc, x, config, state, mask)
             -- re-evaluate function only if not in last iteration
             -- the reason we do this: in a stochastic setting,
             -- no use to re-evaluate that function here
+            local t5_1 = timer:time().real
+            -- print(string.format('t5_1: Total time: %f seconds', t5_1))
             f,g = opfunc(x)
+            local t5_2 = timer:time().real
+            --print(string.format('t5_2: Total time: %f seconds', t5_2))
             g:cmul(mask) -- add by chris
             lsFuncEval = 1
             append(f_hist, f)
          end
       end
-
+      local t6 = timer:time().real
+      -- print(string.format('t6: Total time: %f seconds', t6))
       -- update func eval
       currentFuncEval = currentFuncEval + lsFuncEval
       state.funcEval = state.funcEval + lsFuncEval
@@ -221,6 +233,8 @@ function mylbfgs(opfunc, x, config, state, mask)
          verbose('function value changing less than tolX')
          break
       end
+      local t7 = timer:time().real
+      -- print(string.format('t7: Total time: %f seconds', t7))
    end -- end while nIter < maxIter do
 
    -- save state
