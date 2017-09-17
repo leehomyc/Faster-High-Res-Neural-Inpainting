@@ -1,9 +1,12 @@
 ## High-Resolution Image Inpainting using Multi-Scale Neural Patch Synthesis
 
+**[update 9/16/2017]** We increase the speed of original version by 6x (30s/image on GPU). 
+
+**[update 9/16/2017]** All raw images of the paper and supplementary material (including input, output and intermediate results) are available at the [project website](http://www.harryyang.org/inpainting).
 
 ![teaser](images/teaser.png "Sample inpainting results on held-out ImageNet images")
 
-**[update 9/16/2017]** We increase the speed of original version by 6x (30s/image on GPU). The updates include:
+**[Faster Inpainting Updates]**:
 
 1. We remove layer 12 of vgg in texture optimization.
 2. In texture optimization, we have three scales and 100 iterations at each scale. Now it only computes the nearest patch at the first iteration of each scale, and re-use the nearest index in later iterations.
