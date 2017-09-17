@@ -187,7 +187,7 @@ function MRFMM:updateGradInput(input, gradOutput)
  
   for i_patch = 1, self.source_x:nElement() do
     local sel_response = self.max_response[1][self.source_y[i_patch]][self.source_x[i_patch]]
-    if sel_response >= self.threshold_conf then 
+    if sel_response >= self.threshold_conf then
       local sel_idx = self.max_id[1][self.source_y[i_patch]][self.source_x[i_patch]]
       local source_idx = (self.source_y[i_patch] - 1) * x:nElement() + self.source_x[i_patch]        
       self.gradTO[{{1, self.nInputPlane}, {self.source_y[i_patch], self.source_y[i_patch] + self.kH - 1}, {self.source_x[i_patch], self.source_x[i_patch] + self.kW - 1}}]:add(self.target_mrf[sel_idx] - source_mrf[source_idx])
