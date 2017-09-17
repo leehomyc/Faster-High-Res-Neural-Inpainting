@@ -114,8 +114,6 @@ function MRFMM:updateGradInput(input, gradOutput)
   end
   local nOutputPlane_all = self.nOutputPlane -- hacked for memory safety
   local num_chunk = math.ceil(nOutputPlane_all / self.gpu_chunck_size_1) 
-
-  local t1 = timer:time().real
   
   for i_chunk = 1, num_chunk do
     local i_start = (i_chunk - 1) * self.gpu_chunck_size_1 + 1
@@ -125,7 +123,6 @@ function MRFMM:updateGradInput(input, gradOutput)
     self.weight = self.target_mrf[{{i_start, i_end}, {1, self.target_mrf:size()[2]}}]
 
     if self.mode == 'memory' then
-      -- local timer_IO = torch.Timer()
       if self.gpu >= 0 then
         if self.backend == 'cudnn' then
           self.weight = self.weight:cuda()
@@ -167,11 +164,8 @@ function MRFMM:updateGradInput(input, gradOutput)
     end
     self.response[{{i_start, i_end}, {1, self.response:size()[2]}, {1, self.response:size()[3]}}] = temp
   end
-  local t1 = timer:time().real
  
-  if self.max_response == nil or self.max_response:size()[2] ~= self.response:size()[2] then
-    local t1 = timer:time().real
-    
+  if self.max_response == nil or self.max_response:size()[2] ~= self.response:size()[2] then    
     local num_chunk_2 = math.ceil(self.response:size()[2] / self.gpu_chunck_size_2) 
     for i_chunk_2 = 1, num_chunk_2 do
       local i_start = (i_chunk_2 - 1) * self.gpu_chunck_size_2 + 1
@@ -182,15 +176,11 @@ function MRFMM:updateGradInput(input, gradOutput)
         self.response[{{1, self.response:size()[1]}, {i_start, i_end}, {1, self.response:size()[3]}}] = self.response[{{1, self.response:size()[1]}, {i_start, i_end}, {1, self.response:size()[3]}}]:cdiv(self.tensor_target_mrfnorm[{{1, self.response:size()[1]}, {1, i_end - i_start + 1}, {1, self.response:size()[3]}}])
       end
     end
-
-    local t1 = timer:time().real
     
     local max_response, max_id = torch.max(self.response, 1)
     self.max_response = max_response
     self.max_id = max_id
   end
-  
-  local t1 = timer:time().real
 
   source_mrf = source_mrf:resize(source_mrf:size()[1], self.nInputPlane, self.kW, self.kH)
   self.target_mrf = self.target_mrf:resize(self.target_mrf:size()[1], self.nInputPlane, self.kW, self.kH)
@@ -206,8 +196,6 @@ function MRFMM:updateGradInput(input, gradOutput)
 
   self.nOutputPlane = nOutputPlane_all
   self.target_mrf = self.target_mrf:resize(self.target_mrf:size()[1], self.nInputPlane * self.kW * self.kH)
-
-  local t1 = timer:time().real
 
   if gradOutput:size()[1] == input:size()[1] then
     if self.gpu >= 0 then
