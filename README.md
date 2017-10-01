@@ -15,10 +15,11 @@
 
 This greatly increases the speed at the cost of very subtle inpainting quality. 
 
-
 This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural Patch Synthesis](https://arxiv.org/pdf/1611.09969). Given an image, we use the content and texture network to jointly infer the missing region. This repository contains the pre-trained model for the content network and the joint optimization code, including the demo to run example images. The code is adapted from the [Context Encoders](https://github.com/pathak22/context-encoder) and [CNNMRF](https://github.com/chuanli11/CNNMRF). Please contact [Harry Yang](http://www.harryyang.org) for questions regarding the paper or the code. Note that the code is for research purpose only.
 
 ### Demo
+
+(The code may give better results when supplying 32 different images (a batch) as input to the content network rather than using one single image as input. This may be due to the mismatch of the training and testing coefficients in batch normalization.)
 
 - Install Torch:  http://torch.ch/docs/getting-started.html#_
 
