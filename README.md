@@ -1,5 +1,7 @@
 ## High-Resolution Image Inpainting using Multi-Scale Neural Patch Synthesis
 
+**[update 9/30/2017]** We shared the inpainting result of 200 ImageNet images and 100 Paris StreetView Images. 
+
 **[update 9/16/2017]** We increase the speed of original version by 6x (30s/image on GPU). 
 
 **[update 9/16/2017]** All raw images of the paper and supplementary material (including input, output and intermediate results) are available at the [project website](http://www.harryyang.org/inpainting).
