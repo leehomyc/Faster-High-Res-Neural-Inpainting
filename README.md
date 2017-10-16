@@ -49,11 +49,12 @@ This is the code for [High-Resolution Image Inpainting using Multi-Scale Neural 
 If you find this code useful for your research, please cite:
 
 ```
-@article{yang2016high,
-  title={High-Resolution Image Inpainting using Multi-Scale Neural Patch Synthesis},
-  author={Yang, Chao and Lu, Xin and Lin, Zhe and Shechtman, Eli and Wang, Oliver and Li, Hao},
-  journal={arXiv preprint arXiv:1611.09969},
-  year={2016}
+@InProceedings{Yang_2017_CVPR,
+author = {Yang, Chao and Lu, Xin and Lin, Zhe and Shechtman, Eli and Wang, Oliver and Li, Hao},
+title = {High-Resolution Image Inpainting Using Multi-Scale Neural Patch Synthesis},
+booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {July},
+year = {2017}
 }
 ```
 
