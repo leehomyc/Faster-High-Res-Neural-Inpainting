@@ -24,6 +24,7 @@ local function loadImage(path,size)
 end
 
 modelG=util.load(opt.model_file,opt.gpu)
+modelG:evaluate()
 
 local real=torch.Tensor(32,3,512,512)
 local real_ctx = torch.Tensor(32,3,128,128)
